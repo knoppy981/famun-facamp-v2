@@ -1,0 +1,63 @@
+import { z } from 'zod';
+import { SortOrderSchema } from '../enums/SortOrder.schema';
+import { CouncilOrderByCompositeAggregateInputObjectSchema } from './CouncilOrderByCompositeAggregateInput.schema';
+import { ConfirmationCodeOrderByInputObjectSchema } from './ConfirmationCodeOrderByInput.schema';
+import { PasswordOrderByWithRelationInputObjectSchema } from './PasswordOrderByWithRelationInput.schema';
+import { PaymentOrderByRelationAggregateInputObjectSchema } from './PaymentOrderByRelationAggregateInput.schema';
+import { FileOrderByRelationAggregateInputObjectSchema } from './FileOrderByRelationAggregateInput.schema';
+import { DelegationOrderByWithRelationInputObjectSchema } from './DelegationOrderByWithRelationInput.schema';
+
+import type { Prisma } from '@prisma/client';
+
+const Schema: z.ZodType<Prisma.UserOrderByWithRelationInput> = z
+  .object({
+    id: z.lazy(() => SortOrderSchema).optional(),
+    email: z.lazy(() => SortOrderSchema).optional(),
+    stripeCustomerId: z.lazy(() => SortOrderSchema).optional(),
+    name: z.lazy(() => SortOrderSchema).optional(),
+    sex: z.lazy(() => SortOrderSchema).optional(),
+    socialName: z.lazy(() => SortOrderSchema).optional(),
+    cpf: z.lazy(() => SortOrderSchema).optional(),
+    rg: z.lazy(() => SortOrderSchema).optional(),
+    passport: z.lazy(() => SortOrderSchema).optional(),
+    phoneNumber: z.lazy(() => SortOrderSchema).optional(),
+    birthDate: z.lazy(() => SortOrderSchema).optional(),
+    nationality: z.lazy(() => SortOrderSchema).optional(),
+    diet: z.lazy(() => SortOrderSchema).optional(),
+    foodRestriction: z.lazy(() => SortOrderSchema).optional(),
+    type: z.lazy(() => SortOrderSchema).optional(),
+    emergencyContactName: z.lazy(() => SortOrderSchema).optional(),
+    emergencyContactPhoneNumber: z.lazy(() => SortOrderSchema).optional(),
+    educationLevel: z.lazy(() => SortOrderSchema).optional(),
+    currentYear: z.lazy(() => SortOrderSchema).optional(),
+    languagesSimulates: z.lazy(() => SortOrderSchema).optional(),
+    councilPreference: z
+      .lazy(() => CouncilOrderByCompositeAggregateInputObjectSchema)
+      .optional(),
+    advisorRole: z.lazy(() => SortOrderSchema).optional(),
+    facebook: z.lazy(() => SortOrderSchema).optional(),
+    instagram: z.lazy(() => SortOrderSchema).optional(),
+    linkedin: z.lazy(() => SortOrderSchema).optional(),
+    leader: z.lazy(() => SortOrderSchema).optional(),
+    delegationId: z.lazy(() => SortOrderSchema).optional(),
+    confirmationCode: z
+      .lazy(() => ConfirmationCodeOrderByInputObjectSchema)
+      .optional(),
+    createdAt: z.lazy(() => SortOrderSchema).optional(),
+    updatedAt: z.lazy(() => SortOrderSchema).optional(),
+    password: z
+      .lazy(() => PasswordOrderByWithRelationInputObjectSchema)
+      .optional(),
+    payments: z
+      .lazy(() => PaymentOrderByRelationAggregateInputObjectSchema)
+      .optional(),
+    files: z
+      .lazy(() => FileOrderByRelationAggregateInputObjectSchema)
+      .optional(),
+    delegation: z
+      .lazy(() => DelegationOrderByWithRelationInputObjectSchema)
+      .optional(),
+  })
+  .strict();
+
+export const UserOrderByWithRelationInputObjectSchema = Schema;

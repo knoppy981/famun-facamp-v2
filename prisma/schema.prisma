@@ -1,0 +1,209 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator zod {
+  provider          = "prisma-zod-generator"
+  output            = "./generated-zod-schemas"
+  isGenerateSelect  = true
+  isGenerateInclude = true
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// models
+
+model User {
+  id               String @id @default(auto()) @map("_id") @db.ObjectId
+  email            String @unique
+  stripeCustomerId String @unique
+
+  // user data
+  name            String
+  sex             Sex
+  socialName      String?
+  cpf             String?
+  rg              String?
+  passport        String?
+  phoneNumber     String
+  birthDate       DateTime
+  nationality     String
+  diet            Diet?
+  foodRestriction String?
+
+  type ParticipantType
+
+  // delegate data
+  emergencyContactName        String?
+  emergencyContactPhoneNumber String?
+  educationLevel              EducationLevel?
+  currentYear                 String?
+  languagesSimulates          Languages[]
+  councilPreference           Council[]
+  // advisor data
+  advisorRole                 AdvisorRole?
+  facebook                    String?
+  instagram                   String?
+  linkedin                    String?
+
+  leader Boolean @default(false)
+
+  password         Password?
+  payments         Payment[]
+  files            File[]
+  delegation       Delegation        @relation(fields: [delegationId], references: [id])
+  delegationId     String            @db.ObjectId
+  confirmationCode ConfirmationCode?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Password {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  hash String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @unique @db.ObjectId
+}
+
+model File {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId      String   @db.ObjectId
+  url         String?
+  type        String
+  fileName    String
+  stream      Bytes
+  contentType String
+  size        Int
+  createdAt   DateTime @default(now())
+
+  @@unique([type, userId])
+}
+
+model Delegation {
+  id                    String              @id @default(auto()) @map("_id") @db.ObjectId
+  code                  String              @unique
+  inviteLink            String
+  school                String              @unique
+  phoneNumber           String
+  paymentExpirationDate DateTime
+  participationMethod   ParticipationMethod
+  address               Address
+  maxDelegates          Int
+  maxAdvisors           Int
+
+  users    User[]
+  payments Payment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Payment {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  amount            Int
+  currency          String
+  delegatesPayments Int
+  advisorsPayments  Int
+  paymentMethod     String
+  receiptUrl        String
+  accepted          Boolean  @default(false)
+  isFake            Boolean? @default(false)
+
+  stripeCheckoutSessionId String?
+  stripePaymentIntentId   String?
+
+  coupon   String?
+  discount Int?
+
+  delegation   Delegation @relation(fields: [delegationId], references: [id])
+  delegationId String     @db.ObjectId
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId       String     @db.ObjectId
+
+  createdAt DateTime @default(now())
+}
+
+model Admin {
+  id               String            @id @default(auto()) @map("_id") @db.ObjectId
+  email            String            @unique
+  hash             String
+  confirmationCode ConfirmationCode?
+}
+
+// types
+
+type Address {
+  address    String
+  city       String
+  postalCode String
+  state      String
+  country    String
+}
+
+type Council {
+  council     String
+  language    Languages
+  id          Int
+  description String
+}
+
+type ConfirmationCode {
+  code      String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
+
+// enums
+
+enum ParticipationMethod {
+  university
+  school
+}
+
+enum ParticipantType {
+  delegate
+  advisor
+}
+
+enum Sex {
+  masc
+  fem
+  other
+}
+
+enum Diet {
+  vegan
+  vegetarian
+  other
+}
+
+enum AdvisorRole {
+  teacher
+  coordinator
+  principal
+  other
+}
+
+enum Languages {
+  portuguese
+  english
+  spanish
+}
+
+enum EducationLevel {
+  university
+  school
+  prep_school
+}
