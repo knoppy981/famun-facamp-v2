@@ -73,14 +73,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   if (delegatesPayments > 0) {
     payments.push({
-      price: "price_1QujAlG8QBKHSgkGZwaoSCaN",
+      price: process.env.STRIPE_PROD_DELEGADO as string,
       quantity: delegatesPayments
     })
   }
 
   if (advisorsPayments > 0) {
     payments.push({
-      price: "price_1QujAVG8QBKHSgkGbNHhkP81",
+      price: process.env.STRIPE_PROD_ADVISOR as string,
       quantity: advisorsPayments
     })
   }
