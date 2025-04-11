@@ -311,7 +311,7 @@ export default function Participants() {
           {delegationSubscriptionStatus.delegates.remaining > 0 ?
             <>
               <AlertCircle className="size-5 text-warning" />
-              Ainda faltam {delegationSubscriptionStatus.delegates.completed} cadastros de delegados
+              Ainda faltam {delegationSubscriptionStatus.delegates.remaining} cadastros de delegados
             </> :
             <>
               <Check className="size-5 text-positive" />
