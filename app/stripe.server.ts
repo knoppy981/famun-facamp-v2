@@ -24,6 +24,8 @@ export async function createCheckoutSession({
   user: User;
   coupon?: string
 }): Promise<Stripe.Checkout.Session> {
+  const { WEBSITE_URL } = process.env;
+
   return await stripe.checkout.sessions.create({
     line_items: payments,
     mode: "payment",
@@ -34,8 +36,8 @@ export async function createCheckoutSession({
       delegatesPayments,
       advisorsPayments
     } as CheckoutSessionMetadata,
-    success_url: `http://localhost:5173/dashboard/payments?${new URLSearchParams({ success: "true" })}`,
-    cancel_url: `http://localhost:5173/dashboard/payments?${new URLSearchParams({ success: "false" })}`,
+    success_url: `${WEBSITE_URL}/dashboard/payments?${new URLSearchParams({ success: "true" })}`,
+    cancel_url: `${WEBSITE_URL}/dashboard/payments?${new URLSearchParams({ success: "false" })}`,
     discounts: coupon ? [{ coupon }] : undefined
   });
 }
