@@ -75,6 +75,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   ]
 
   const { payments: _payments, ...filteredDelegation } = delegation
+  filteredDelegation.users = filteredDelegation.users.filter(u => u.type === "delegate")
+  
   return json({ delegation: filteredDelegation, defaultCouncils })
 }
 
@@ -151,6 +153,7 @@ export default function Delegate() {
 
           <TableBody>
             {delegation.users.map((user, index) => {
+              if (user.type === "advisor") return null
               const firstTime = user.councilPreference.length === 0
 
               return (
